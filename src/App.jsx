@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { useAuth } from './hooks/useAuth'
 
-// Pages - à créer prochainement
-// import LoginPage from './pages/LoginPage'
-// import DashboardPage from './pages/DashboardPage'
+// Pages
+import LoginPage from './pages/LoginPage'
+// import DashboardPage from './pages/DashboardPage' // À créer
 
 // Composant temporaire en attendant les vraies pages
 function TempPage({ title }) {
@@ -71,7 +71,7 @@ function App() {
           {/* Routes publiques */}
           <Route path="/login" element={
             <PublicRoute>
-              <TempPage title="Page de Connexion" />
+              <LoginPage />
             </PublicRoute>
           } />
           
