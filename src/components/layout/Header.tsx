@@ -31,7 +31,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
       {/* Title */}
       <div>
         <h2 className="text-lg font-semibold text-gray-900">
-          {language === 'fr' ? 'Bienvenue' : 'Welcome'}, {profile?.full_name || 'Client'}
+          {language === 'fr' ? 'Bienvenue' : 'Welcome'}, {profile?.first_name || 'Client'}
         </h2>
         <p className="text-sm text-gray-500">
           {language === 'fr'
@@ -96,12 +96,12 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
               <Avatar className="h-8 w-8">
                 <AvatarImage src={profile?.avatar_url || undefined} />
                 <AvatarFallback className="bg-primary text-white text-sm">
-                  {profile?.full_name ? getInitials(profile.full_name) : 'U'}
+                  {profile?.first_name && profile?.last_name ? getInitials(`${profile.first_name} ${profile.last_name}`) : 'U'}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden md:block text-left">
                 <p className="text-sm font-medium text-gray-900">
-                  {profile?.full_name || 'Utilisateur'}
+                  {profile?.first_name && profile?.last_name ? `${profile.first_name} ${profile.last_name}` : 'Utilisateur'}
                 </p>
                 <p className="text-xs text-gray-500">
                   {profile?.company_name || 'Client'}
