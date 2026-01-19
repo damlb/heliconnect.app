@@ -4,6 +4,21 @@ import { useAuth } from '@/hooks/useAuth'
 import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
+// Liste des domaines email personnels interdits
+const BLOCKED_EMAIL_DOMAINS = [
+  'gmail.com', 'yahoo.com', 'yahoo.fr', 'hotmail.com', 'hotmail.fr',
+  'outlook.com', 'outlook.fr', 'live.com', 'live.fr', 'msn.com',
+  'aol.com', 'icloud.com', 'me.com', 'mail.com', 'protonmail.com',
+  'gmx.com', 'gmx.fr', 'free.fr', 'orange.fr', 'sfr.fr', 'laposte.net',
+  'wanadoo.fr', 'bbox.fr', 'numericable.fr'
+]
+
+const isBusinessEmail = (email: string): boolean => {
+  const domain = email.split('@')[1]?.toLowerCase()
+  if (!domain) return false
+  return !BLOCKED_EMAIL_DOMAINS.includes(domain)
+}
+
 export default function Login() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login')
   const [email, setEmail] = useState('')
@@ -11,6 +26,9 @@ export default function Login() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [companyName, setCompanyName] = useState('')
+  const [siret, setSiret] = useState('')
+  const [jobTitle, setJobTitle] = useState('')
+  const [website, setWebsite] = useState('')
   const [phone, setPhone] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -40,6 +58,19 @@ export default function Login() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    // Validation email professionnel
+    if (!isBusinessEmail(email)) {
+      setError('Veuillez utiliser une adresse email professionnelle. Les adresses personnelles (Gmail, Hotmail, Yahoo, etc.) ne sont pas acceptées.')
+      return
+    }
+
+    // Validation société obligatoire
+    if (!companyName.trim()) {
+      setError('Le nom de la société est obligatoire.')
+      return
+    }
+
     setIsLoading(true)
 
     try {
@@ -62,8 +93,12 @@ export default function Login() {
           email,
           first_name: firstName,
           last_name: lastName,
+          full_name: `${firstName} ${lastName}`,
           phone,
           company_name: companyName,
+          siret,
+          job_title: jobTitle,
+          website,
           role: 'client',
           is_active: true,
         })
@@ -270,10 +305,20 @@ export default function Login() {
               </div>
             </form>
           ) : (
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleRegister} className="space-y-3">
+              {/* Bandeau B2B */}
+              <div className="bg-[#0B1D51]/5 border border-[#0B1D51]/20 rounded-lg p-3 mb-4">
+                <p className="text-xs text-[#0B1D51] text-center font-medium">
+                  🏢 Plateforme réservée aux professionnels du tourisme
+                </p>
+                <p className="text-xs text-gray-500 text-center mt-1">
+                  Email professionnel requis (pas de Gmail, Hotmail, etc.)
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
                     Prénom *
                   </label>
                   <input
@@ -281,13 +326,13 @@ export default function Login() {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="Jean"
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
+                    className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
                     disabled={isLoading}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
                     Nom *
                   </label>
                   <input
@@ -295,7 +340,7 @@ export default function Login() {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Dupont"
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
+                    className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
                     disabled={isLoading}
                     required
                   />
@@ -303,63 +348,108 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
-                  Nom de l'entreprise
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
+                  Société *
                 </label>
                 <input
                   type="text"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="Agence Voyage Premium"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
+                  className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
                   disabled={isLoading}
+                  required
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
+                    SIRET
+                  </label>
+                  <input
+                    type="text"
+                    value={siret}
+                    onChange={(e) => setSiret(e.target.value)}
+                    placeholder="123 456 789 00012"
+                    className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
+                    disabled={isLoading}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
+                    Fonction
+                  </label>
+                  <input
+                    type="text"
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    placeholder="Directeur commercial"
+                    className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
-                  Email *
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
+                  Email professionnel *
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="votre@email.com"
-                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
+                    placeholder="prenom@votresociete.com"
+                    className="w-full pl-9 pr-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
                     disabled={isLoading}
                     required
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
-                  Téléphone
-                </label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+33 6 00 00 00 00"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
-                  disabled={isLoading}
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
+                    Téléphone
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+33 6 00 00 00 00"
+                    className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
+                    disabled={isLoading}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
+                    Site web
+                  </label>
+                  <input
+                    type="url"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="https://votresociete.com"
+                    className="w-full px-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
+                    disabled={isLoading}
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-1">
                   Mot de passe *
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
+                    className="w-full pl-9 pr-3 py-2.5 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors text-sm"
                     disabled={isLoading}
                     required
                     minLength={6}
