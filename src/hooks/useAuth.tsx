@@ -52,20 +52,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Initialize auth state
   useEffect(() => {
+    let mounted = true
+
+    // Timeout de sécurité - si getSession ne répond pas en 2s, on arrête le loading
+    const timeout = setTimeout(() => {
+      if (mounted && isLoading) {
+        console.log('Auth: Timeout - forcing isLoading to false')
+        setIsLoading(false)
+      }
+    }, 2000)
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return
+      clearTimeout(timeout)
       setSession(session)
       setUser(session?.user ?? null)
       if (session?.user) {
-        fetchProfile(session.user.id).finally(() => setIsLoading(false))
+        fetchProfile(session.user.id).finally(() => {
+          if (mounted) setIsLoading(false)
+        })
       } else {
         setIsLoading(false)
       }
+    }).catch((err) => {
+      console.error('Auth: getSession error', err)
+      if (mounted) setIsLoading(false)
     })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!mounted) return
         setSession(session)
         setUser(session?.user ?? null)
 
@@ -78,7 +96,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      clearTimeout(timeout)
+      subscription.unsubscribe()
+    }
   }, [])
 
   // Sign in

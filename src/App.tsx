@@ -3,6 +3,12 @@ import { AuthProvider, useAuth } from '@/hooks/useAuth'
 import { AppLayout } from '@/components/layout'
 import Login from '@/pages/Login'
 import Flights from '@/pages/Flights'
+import Bookings from '@/pages/Bookings'
+import Alerts from '@/pages/Alerts'
+import Requests from '@/pages/Requests'
+import Invoices from '@/pages/Invoices'
+import Subscription from '@/pages/Subscription'
+import Account from '@/pages/Account'
 import './index.css'
 
 // Protected route wrapper
@@ -74,20 +80,20 @@ function AppRoutes() {
       >
         <Route index element={<Navigate to="/flights" replace />} />
         <Route path="flights" element={<Flights />} />
-        <Route path="bookings" element={<ComingSoon title="Mes réservations" />} />
-        <Route path="alerts" element={<ComingSoon title="Mes alertes" />} />
-        <Route path="requests" element={<ComingSoon title="Demandes de vol" />} />
-        <Route path="invoices" element={<ComingSoon title="Factures" />} />
-        <Route path="subscription" element={<ComingSoon title="Mon abonnement" />} />
-        <Route path="account" element={<ComingSoon title="Mon compte" />} />
+        <Route path="bookings" element={<Bookings />} />
+        <Route path="alerts" element={<Alerts />} />
+        <Route path="requests" element={<Requests />} />
+        <Route path="invoices" element={<Invoices />} />
+        <Route path="subscription" element={<Subscription />} />
+        <Route path="account" element={<Account />} />
       </Route>
 
       {/* Legal pages */}
       <Route path="/cgu" element={<LegalPage type="cgu" />} />
       <Route path="/cgv" element={<LegalPage type="cgv" />} />
 
-      {/* Catch all */}
-      <Route path="*" element={<Navigate to="/flights" replace />} />
+      {/* Catch all - redirect to login (ProtectedRoute will handle redirect if authenticated) */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   )
 }
