@@ -39,10 +39,11 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 // Public route wrapper (redirects to flights if authenticated)
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, profile } = useAuth()
 
   // Ne pas attendre le loading pour afficher la page login
-  if (!isLoading && isAuthenticated) {
+  // Mais attendre que le profile soit chargé avant de rediriger
+  if (!isLoading && isAuthenticated && profile) {
     return <Navigate to="/flights" replace />
   }
 

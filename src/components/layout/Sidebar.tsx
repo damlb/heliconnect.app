@@ -109,7 +109,7 @@ export default function Sidebar({ language, isCollapsed, onToggle }: SidebarProp
       {!isCollapsed && (
         <div className="border-t border-gray-200 p-4">
           <div className="text-xs text-gray-400">
-            © 2025 HeliConnect
+            © {new Date().getFullYear()} HeliConnect
           </div>
         </div>
       )}
