@@ -12,7 +12,6 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
-import { useState } from 'react'
 
 // Map icon names to components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -27,10 +26,11 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 interface SidebarProps {
   language: 'fr' | 'en'
+  isCollapsed: boolean
+  onToggle: () => void
 }
 
-export default function Sidebar({ language }: SidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+export default function Sidebar({ language, isCollapsed, onToggle }: SidebarProps) {
   const location = useLocation()
 
   return (
@@ -44,16 +44,25 @@ export default function Sidebar({ language }: SidebarProps) {
       <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
         {!isCollapsed && (
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-sm">H</span>
-            </div>
-            <span className="font-display font-semibold text-primary">
+            <img
+              src="/images/logo-icon.svg"
+              alt="HeliConnect"
+              className="h-8 w-8"
+            />
+            <span className="font-poppins font-bold text-primary">
               HeliConnect
             </span>
           </div>
         )}
+        {isCollapsed && (
+          <img
+            src="/images/logo-icon.svg"
+            alt="HeliConnect"
+            className="h-8 w-8 mx-auto"
+          />
+        )}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={onToggle}
           className="p-1.5 rounded-md hover:bg-gray-100 transition-colors"
         >
           {isCollapsed ? (

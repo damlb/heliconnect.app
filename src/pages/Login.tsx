@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
-import { Plane, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
+import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export default function Login() {
@@ -82,9 +82,25 @@ export default function Login() {
 
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 flex items-center justify-center p-4">
-        <div className="max-w-md w-full">
-          <div className="bg-white rounded-lg shadow-2xl p-8 text-center">
+      <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
+        {/* Overlay bleu profond avec opacité */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0B1D51]/95 via-[#1a365d]/90 to-[#2d4a7c]/95 z-10"></div>
+
+        {/* Vidéo d'hélicoptère en arrière-plan */}
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover blur-sm"
+          >
+            <source src="/videos/helicopter-flight.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div className="max-w-md w-full relative z-20">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 text-center">
             <div className="flex justify-center mb-4">
               <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
                 <svg
@@ -102,7 +118,7 @@ export default function Login() {
                 </svg>
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-emerald-600 font-display mb-2">
+            <h2 className="text-2xl font-bold text-emerald-600 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
               Inscription réussie !
             </h2>
             <p className="text-gray-600 mb-6">
@@ -113,7 +129,7 @@ export default function Login() {
                 setRegistrationSuccess(false)
                 setActiveTab('login')
               }}
-              className="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-600 transition-colors"
+              className="w-full bg-gradient-to-r from-[#D4AF64] to-[#C99846] text-[#0B1D51] py-3 px-4 rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
             >
               Se connecter
             </button>
@@ -124,41 +140,57 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        {/* Logo et titre */}
+    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
+      {/* Overlay bleu profond avec opacité */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0B1D51]/95 via-[#1a365d]/90 to-[#2d4a7c]/95 z-10"></div>
+
+      {/* Vidéo d'hélicoptère en arrière-plan */}
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover blur-sm"
+        >
+          <source src="/videos/helicopter-flight.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      {/* Contenu */}
+      <div className="max-w-md w-full relative z-20">
+        {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gold rounded-full mb-4">
-            <Plane className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="text-4xl font-bold text-white font-display mb-2">
-            HeliConnect
-          </h1>
-          <p className="text-blue-200">
+          <img
+            src="/images/logo.svg"
+            alt="HeliConnect"
+            className="h-48 mx-auto mb-4"
+          />
+          <p className="text-[#D4AF64]">
             Plateforme B2B - Vols à vide d'hélicoptères
           </p>
         </div>
 
         {/* Formulaire */}
-        <div className="bg-white rounded-lg shadow-2xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Tabs */}
           <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
             <button
               onClick={() => setActiveTab('login')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                 activeTab === 'login'
-                  ? 'bg-white text-primary shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-gradient-to-r from-[#D4AF64] to-[#C99846] text-[#0B1D51] shadow-sm'
+                  : 'text-gray-600 hover:text-[#0B1D51]'
               }`}
             >
               Connexion
             </button>
             <button
               onClick={() => setActiveTab('register')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
                 activeTab === 'register'
-                  ? 'bg-white text-primary shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-gradient-to-r from-[#D4AF64] to-[#C99846] text-[#0B1D51] shadow-sm'
+                  : 'text-gray-600 hover:text-[#0B1D51]'
               }`}
             >
               Inscription
@@ -175,7 +207,7 @@ export default function Login() {
           {activeTab === 'login' ? (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                   Email
                 </label>
                 <div className="relative">
@@ -185,7 +217,7 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="votre@email.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                     disabled={isLoading}
                     required
                   />
@@ -193,7 +225,7 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                   Mot de passe
                 </label>
                 <div className="relative">
@@ -203,7 +235,7 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                     disabled={isLoading}
                     required
                   />
@@ -213,7 +245,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-[#D4AF64] to-[#C99846] text-[#0B1D51] py-3 px-4 rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -226,7 +258,7 @@ export default function Login() {
               </button>
 
               <div className="text-center">
-                <a href="#" className="text-sm text-primary hover:underline">
+                <a href="#" className="text-sm text-[#D4AF64] hover:text-[#C99846] font-medium transition-colors">
                   Mot de passe oublié ?
                 </a>
               </div>
@@ -235,7 +267,7 @@ export default function Login() {
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                     Prénom *
                   </label>
                   <input
@@ -243,13 +275,13 @@ export default function Login() {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="Jean"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                     disabled={isLoading}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                     Nom *
                   </label>
                   <input
@@ -257,7 +289,7 @@ export default function Login() {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Dupont"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                     disabled={isLoading}
                     required
                   />
@@ -265,7 +297,7 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                   Nom de l'entreprise
                 </label>
                 <input
@@ -273,13 +305,13 @@ export default function Login() {
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="Agence Voyage Premium"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                   disabled={isLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                   Email *
                 </label>
                 <div className="relative">
@@ -289,7 +321,7 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="votre@email.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                     disabled={isLoading}
                     required
                   />
@@ -297,7 +329,7 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                   Téléphone
                 </label>
                 <input
@@ -305,13 +337,13 @@ export default function Login() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+33 6 00 00 00 00"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                   disabled={isLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#0B1D51] mb-2">
                   Mot de passe *
                 </label>
                 <div className="relative">
@@ -321,7 +353,7 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#D4AF64] focus:outline-none transition-colors"
                     disabled={isLoading}
                     required
                     minLength={6}
@@ -332,7 +364,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-[#D4AF64] to-[#C99846] text-[#0B1D51] py-3 px-4 rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -346,11 +378,11 @@ export default function Login() {
 
               <p className="text-xs text-gray-500 text-center">
                 En vous inscrivant, vous acceptez nos{' '}
-                <Link to="/cgu" className="text-primary hover:underline">
+                <Link to="/cgu" className="text-[#D4AF64] hover:text-[#C99846] font-medium transition-colors">
                   CGU
                 </Link>{' '}
                 et notre{' '}
-                <Link to="/cgv" className="text-primary hover:underline">
+                <Link to="/cgv" className="text-[#D4AF64] hover:text-[#C99846] font-medium transition-colors">
                   CGV
                 </Link>
               </p>
@@ -360,7 +392,7 @@ export default function Login() {
           <div className="mt-6 text-center">
             <a
               href="https://heliconnect.fr"
-              className="text-sm text-gray-500 hover:text-primary"
+              className="text-sm text-gray-500 hover:text-[#D4AF64] transition-colors"
             >
               ← Retour au site
             </a>
@@ -368,7 +400,7 @@ export default function Login() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-blue-200 text-sm mt-6">
+        <p className="text-center text-blue-200/80 text-sm mt-6">
           © 2024 HeliConnect. Tous droits réservés.
         </p>
       </div>
