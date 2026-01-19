@@ -7,7 +7,7 @@ import './index.css'
 
 // Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, profile } = useAuth()
 
   if (isLoading) {
     return (
@@ -19,6 +19,13 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
+  }
+
+  // Vérifier que l'utilisateur a le rôle client ou superadmin
+  if (profile && profile.role !== 'client' && profile.role !== 'superadmin') {
+    // Rediriger vers le site principal
+    window.location.href = 'https://heliconnect.fr'
+    return null
   }
 
   return <>{children}</>

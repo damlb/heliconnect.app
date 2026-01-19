@@ -80,6 +80,21 @@ export default function Login() {
     }
   }
 
+  // Composant Logo
+  const LogoSection = ({ subtitle }: { subtitle: string }) => (
+    <div className="text-center mb-8">
+      <img
+        src="/images/logo-icon.svg"
+        alt="HeliConnect"
+        className="h-24 w-24 mx-auto mb-4"
+      />
+      <h1 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+        HeliConnect
+      </h1>
+      <p className="text-[#D4AF64]">{subtitle}</p>
+    </div>
+  )
+
   if (registrationSuccess) {
     return (
       <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
@@ -160,16 +175,7 @@ export default function Login() {
       {/* Contenu */}
       <div className="max-w-md w-full relative z-20">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <img
-            src="/images/logo.svg"
-            alt="HeliConnect"
-            className="h-48 mx-auto mb-4"
-          />
-          <p className="text-[#D4AF64]">
-            Plateforme B2B - Vols à vide d'hélicoptères
-          </p>
-        </div>
+        <LogoSection subtitle="Plateforme B2B - Vols à vide d'hélicoptères" />
 
         {/* Formulaire */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
