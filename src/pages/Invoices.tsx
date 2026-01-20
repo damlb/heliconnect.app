@@ -4,8 +4,6 @@ import {
   FileText,
   Download,
   Eye,
-  Calendar,
-  Euro,
   CheckCircle,
   Clock,
   AlertCircle,

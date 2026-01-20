@@ -3,7 +3,6 @@ import { useOutletContext } from 'react-router-dom'
 import {
   CreditCard,
   Check,
-  Zap,
   Star,
   Clock,
   Calendar,
@@ -74,7 +73,7 @@ export default function Subscription() {
     }
   }
 
-  const handleSelectPlan = (planId: string) => {
+  const handleSelectPlan = (_planId: string) => {
     // TODO: Implement Stripe checkout
     alert(language === 'fr'
       ? 'Le paiement sera bientôt disponible. Contactez-nous pour souscrire.'

@@ -93,18 +93,6 @@ function AppRoutes() {
   )
 }
 
-// Placeholder component for pages not yet implemented
-function ComingSoon({ title }: { title: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center h-64">
-      <h1 className="text-2xl font-display font-semibold text-gray-900 mb-2">
-        {title}
-      </h1>
-      <p className="text-gray-500">Cette page est en cours de développement</p>
-    </div>
-  )
-}
-
 // Legal pages placeholder
 function LegalPage({ type }: { type: 'cgu' | 'cgv' }) {
   const title = type === 'cgu' ? "Conditions Générales d'Utilisation" : "Conditions Générales de Vente"
