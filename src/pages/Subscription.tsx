@@ -163,10 +163,10 @@ export default function Subscription() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-display font-semibold text-gray-900">
+        <h1 className="text-xl md:text-2xl font-display font-semibold text-gray-900">
           {t.title}
         </h1>
-        <p className="text-gray-500 mt-1">{t.subtitle}</p>
+        <p className="text-gray-500 mt-1 text-sm md:text-base">{t.subtitle}</p>
       </div>
 
       {/* Current subscription */}
@@ -184,9 +184,9 @@ export default function Subscription() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               <div>
-                <h3 className="text-2xl font-bold text-primary">
+                <h3 className="text-xl md:text-2xl font-bold text-primary">
                   {currentPlan ? (language === 'fr' ? currentPlan.name : currentPlan.nameEn) : subscription.plan_id}
                 </h3>
                 {currentPlan && (
@@ -202,12 +202,12 @@ export default function Subscription() {
                   {subscription.cancel_at_period_end ? (
                     <div className="flex items-center gap-2 text-red-600">
                       <Clock className="h-4 w-4" />
-                      <span>{t.cancelledAt} {formatDateLong(subscription.current_period_end)}</span>
+                      <span className="text-xs md:text-sm">{t.cancelledAt} {formatDateLong(subscription.current_period_end)}</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
-                      <span>{t.nextBilling}: {formatDateLong(subscription.current_period_end)}</span>
+                      <span className="text-xs md:text-sm">{t.nextBilling}: {formatDateLong(subscription.current_period_end)}</span>
                     </div>
                   )}
                 </div>
@@ -215,7 +215,7 @@ export default function Subscription() {
 
               <div className="flex flex-col gap-2">
                 {subscription.stripe_subscription_id && (
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto">
                     <CreditCard className="h-4 w-4 mr-2" />
                     {t.managePayment}
                   </Button>
@@ -224,7 +224,7 @@ export default function Subscription() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-red-600 hover:text-red-700"
+                    className="text-red-600 hover:text-red-700 w-full sm:w-auto"
                     onClick={handleCancelSubscription}
                   >
                     {t.cancelSubscription}
@@ -261,10 +261,10 @@ export default function Subscription() {
 
       {/* Plans */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-4">
           {subscription ? (language === 'fr' ? 'Changer de plan' : 'Change plan') : (language === 'fr' ? 'Choisir un plan' : 'Choose a plan')}
         </h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {SUBSCRIPTION_PLANS.map((plan) => {
             const isCurrentPlan = subscription?.plan_id === plan.id && subscription?.status !== 'expired'
             const isPopular = plan.id === 'monthly'
@@ -282,17 +282,17 @@ export default function Subscription() {
                     </Badge>
                   </div>
                 )}
-                <CardContent className="pt-8">
+                <CardContent className="pt-6 md:pt-8">
                   <div className="text-center">
-                    <h3 className="text-xl font-bold">
+                    <h3 className="text-lg md:text-xl font-bold">
                       {language === 'fr' ? plan.name : plan.nameEn}
                     </h3>
-                    <div className="mt-4">
-                      <span className="text-4xl font-bold">
+                    <div className="mt-3 md:mt-4">
+                      <span className="text-3xl md:text-4xl font-bold">
                         {plan.price === 0 ? t.free : `${plan.price}€`}
                       </span>
                       {plan.price > 0 && (
-                        <span className="text-gray-500">
+                        <span className="text-gray-500 text-sm">
                           {language === 'fr' ? plan.period : plan.periodEn}
                         </span>
                       )}

@@ -268,14 +268,14 @@ export default function Alerts() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-semibold text-gray-900">
+          <h1 className="text-xl md:text-2xl font-display font-semibold text-gray-900">
             {t.title}
           </h1>
-          <p className="text-gray-500 mt-1">{t.subtitle}</p>
+          <p className="text-gray-500 mt-1 text-sm md:text-base">{t.subtitle}</p>
         </div>
-        <Button onClick={openCreateModal}>
+        <Button onClick={openCreateModal} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           {t.createAlert}
         </Button>
@@ -298,8 +298,8 @@ export default function Alerts() {
         <div className="grid gap-4">
           {alerts.map((alert) => (
             <Card key={alert.id} className={`transition-opacity ${!alert.is_active ? 'opacity-60' : ''}`}>
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
+              <CardContent className="p-4 md:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   {/* Alert info */}
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
@@ -313,10 +313,10 @@ export default function Alerts() {
                       </Badge>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-sm">
                       <div className="flex items-center gap-1">
                         <MapPin className="h-4 w-4 text-gray-400" />
-                        <span>
+                        <span className="text-xs md:text-sm">
                           {alert.departure_city || t.anyCity} → {alert.arrival_city || t.anyCity}
                         </span>
                       </div>
@@ -324,7 +324,7 @@ export default function Alerts() {
                       {(alert.date_from || alert.date_to) && (
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4 text-gray-400" />
-                          <span>
+                          <span className="text-xs md:text-sm">
                             {alert.date_from ? formatDateLong(alert.date_from) : t.anyDate}
                             {alert.date_to && ` - ${formatDateLong(alert.date_to)}`}
                           </span>
@@ -333,11 +333,11 @@ export default function Alerts() {
 
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4 text-gray-400" />
-                        <span>{alert.min_seats} {t.seats}</span>
+                        <span className="text-xs md:text-sm">{alert.min_seats} {t.seats}</span>
                       </div>
 
                       {alert.max_price && (
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="text-xs">
                           {alert.max_price}€ {t.maxPriceLabel}
                         </Badge>
                       )}
@@ -350,7 +350,7 @@ export default function Alerts() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 justify-end">
                     <Switch
                       checked={alert.is_active}
                       onCheckedChange={() => handleToggleAlert(alert)}
@@ -379,7 +379,7 @@ export default function Alerts() {
 
       {/* Create/Edit Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg mx-4 sm:mx-auto">
           <DialogHeader>
             <DialogTitle>
               {editingAlert ? t.editAlert : t.createAlert}
@@ -388,7 +388,7 @@ export default function Alerts() {
 
           <div className="space-y-4">
             {/* Route */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label>{t.departure}</Label>
                 <Input
@@ -420,7 +420,7 @@ export default function Alerts() {
             </div>
 
             {/* Dates */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label>{t.dateFrom}</Label>
                 <Input
@@ -440,7 +440,7 @@ export default function Alerts() {
             </div>
 
             {/* Seats and price */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label>{t.minSeats}</Label>
                 <Select value={minSeats} onValueChange={setMinSeats}>
@@ -489,11 +489,11 @@ export default function Alerts() {
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
               {t.cancel}
             </Button>
-            <Button onClick={handleSaveAlert}>
+            <Button onClick={handleSaveAlert} className="w-full sm:w-auto">
               {t.save}
             </Button>
           </DialogFooter>

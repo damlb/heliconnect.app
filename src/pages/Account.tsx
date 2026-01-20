@@ -222,12 +222,12 @@ export default function Account() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-semibold text-gray-900">
+          <h1 className="text-xl md:text-2xl font-display font-semibold text-gray-900">
             {t.title}
           </h1>
-          <p className="text-gray-500 mt-1">{t.subtitle}</p>
+          <p className="text-gray-500 mt-1 text-sm md:text-base">{t.subtitle}</p>
         </div>
         {successMessage && (
           <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg text-sm font-medium">
@@ -237,18 +237,18 @@ export default function Account() {
       </div>
 
       <Tabs defaultValue="profile">
-        <TabsList>
-          <TabsTrigger value="profile">
-            <User className="h-4 w-4 mr-2" />
-            {t.profile}
+        <TabsList className="w-full sm:w-auto flex">
+          <TabsTrigger value="profile" className="flex-1 sm:flex-none">
+            <User className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">{t.profile}</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications">
-            <Bell className="h-4 w-4 mr-2" />
-            {t.notifications}
+          <TabsTrigger value="notifications" className="flex-1 sm:flex-none">
+            <Bell className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">{t.notifications}</span>
           </TabsTrigger>
-          <TabsTrigger value="security">
-            <Lock className="h-4 w-4 mr-2" />
-            {t.security}
+          <TabsTrigger value="security" className="flex-1 sm:flex-none">
+            <Lock className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">{t.security}</span>
           </TabsTrigger>
         </TabsList>
 
@@ -291,7 +291,7 @@ export default function Account() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label>{t.firstName}</Label>
                   <Input
@@ -319,7 +319,7 @@ export default function Account() {
                   placeholder="+33 6 12 34 56 78"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label>{t.company}</Label>
                   <Input
@@ -368,7 +368,7 @@ export default function Account() {
                   onChange={(e) => setStreet(e.target.value)}
                 />
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <Label>{t.postalCode}</Label>
                   <Input
@@ -376,7 +376,7 @@ export default function Account() {
                     onChange={(e) => setPostalCode(e.target.value)}
                   />
                 </div>
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <Label>{t.city}</Label>
                   <Input
                     value={city}

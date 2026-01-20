@@ -194,10 +194,10 @@ export default function Invoices() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-display font-semibold text-gray-900">
+        <h1 className="text-xl md:text-2xl font-display font-semibold text-gray-900">
           {t.title}
         </h1>
-        <p className="text-gray-500 mt-1">{t.subtitle}</p>
+        <p className="text-gray-500 mt-1 text-sm md:text-base">{t.subtitle}</p>
       </div>
 
       {/* Invoices list */}
@@ -210,86 +210,136 @@ export default function Invoices() {
           </CardContent>
         </Card>
       ) : (
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t.invoiceNumber}</TableHead>
-                  <TableHead>{t.date}</TableHead>
-                  <TableHead>{t.description}</TableHead>
-                  <TableHead className="text-right">{t.amount}</TableHead>
-                  <TableHead>{t.status}</TableHead>
-                  <TableHead className="text-right">{t.actions}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {invoices.map((invoice) => {
-                  const status = statusConfig[invoice.status as keyof typeof statusConfig]
-                  const StatusIcon = status?.icon || FileText
+        <>
+          {/* Mobile view - Cards */}
+          <div className="md:hidden space-y-4">
+            {invoices.map((invoice) => {
+              const status = statusConfig[invoice.status as keyof typeof statusConfig]
+              const StatusIcon = status?.icon || FileText
 
-                  return (
-                    <TableRow key={invoice.id}>
-                      <TableCell className="font-mono font-medium">
-                        {invoice.invoice_number}
-                      </TableCell>
-                      <TableCell>
-                        {formatDateLong(invoice.created_at)}
-                      </TableCell>
-                      <TableCell>
-                        {getInvoiceDescription(invoice)}
-                      </TableCell>
-                      <TableCell className="text-right font-semibold">
-                        {formatPrice(invoice.total)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={status?.color}>
-                          <StatusIcon className="h-3 w-3 mr-1" />
-                          {language === 'fr' ? status?.labelFr : status?.labelEn}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
+              return (
+                <Card key={invoice.id}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <p className="font-mono font-medium text-sm">{invoice.invoice_number}</p>
+                        <p className="text-xs text-gray-500">{formatDateLong(invoice.created_at)}</p>
+                      </div>
+                      <Badge className={status?.color}>
+                        <StatusIcon className="h-3 w-3 mr-1" />
+                        {language === 'fr' ? status?.labelFr : status?.labelEn}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{getInvoiceDescription(invoice)}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">{formatPrice(invoice.total)}</span>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleViewDetails(invoice)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        {(invoice.pdf_url || invoice.stripe_invoice_pdf) && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleViewDetails(invoice)}
+                            onClick={() => handleDownloadPdf(invoice)}
                           >
-                            <Eye className="h-4 w-4" />
+                            <Download className="h-4 w-4" />
                           </Button>
-                          {(invoice.pdf_url || invoice.stripe_invoice_pdf) && (
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+
+          {/* Desktop view - Table */}
+          <Card className="hidden md:block">
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t.invoiceNumber}</TableHead>
+                    <TableHead>{t.date}</TableHead>
+                    <TableHead>{t.description}</TableHead>
+                    <TableHead className="text-right">{t.amount}</TableHead>
+                    <TableHead>{t.status}</TableHead>
+                    <TableHead className="text-right">{t.actions}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {invoices.map((invoice) => {
+                    const status = statusConfig[invoice.status as keyof typeof statusConfig]
+                    const StatusIcon = status?.icon || FileText
+
+                    return (
+                      <TableRow key={invoice.id}>
+                        <TableCell className="font-mono font-medium">
+                          {invoice.invoice_number}
+                        </TableCell>
+                        <TableCell>
+                          {formatDateLong(invoice.created_at)}
+                        </TableCell>
+                        <TableCell>
+                          {getInvoiceDescription(invoice)}
+                        </TableCell>
+                        <TableCell className="text-right font-semibold">
+                          {formatPrice(invoice.total)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={status?.color}>
+                            <StatusIcon className="h-3 w-3 mr-1" />
+                            {language === 'fr' ? status?.labelFr : status?.labelEn}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleDownloadPdf(invoice)}
+                              onClick={() => handleViewDetails(invoice)}
                             >
-                              <Download className="h-4 w-4" />
+                              <Eye className="h-4 w-4" />
                             </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+                            {(invoice.pdf_url || invoice.stripe_invoice_pdf) && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDownloadPdf(invoice)}
+                              >
+                                <Download className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </>
       )}
 
       {/* Detail Modal */}
       <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl mx-4 sm:mx-auto">
           <DialogHeader>
             <DialogTitle>{t.invoiceDetails}</DialogTitle>
           </DialogHeader>
           {selectedInvoice && (
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Invoice header */}
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-gray-500">{t.invoiceNumber}</p>
-                  <p className="font-mono font-semibold text-lg">
+                  <p className="font-mono font-semibold text-base md:text-lg">
                     {selectedInvoice.invoice_number}
                   </p>
                 </div>
@@ -302,7 +352,7 @@ export default function Invoices() {
               </div>
 
               {/* Dates */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500">{t.date}</p>
                   <p className="font-medium">{formatDateLong(selectedInvoice.created_at)}</p>
@@ -369,11 +419,12 @@ export default function Invoices() {
               </div>
 
               {/* Actions */}
-              <div className="flex justify-end gap-2 pt-4 border-t">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4 border-t">
                 {selectedInvoice.stripe_invoice_url && (
                   <Button
                     variant="outline"
                     onClick={() => window.open(selectedInvoice.stripe_invoice_url || '', '_blank')}
+                    className="w-full sm:w-auto"
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
                     {t.openStripe}
@@ -383,12 +434,13 @@ export default function Invoices() {
                   <Button
                     variant="outline"
                     onClick={() => handleDownloadPdf(selectedInvoice)}
+                    className="w-full sm:w-auto"
                   >
                     <Download className="h-4 w-4 mr-2" />
                     {t.download}
                   </Button>
                 )}
-                <Button onClick={() => setIsDetailModalOpen(false)}>
+                <Button onClick={() => setIsDetailModalOpen(false)} className="w-full sm:w-auto">
                   {t.close}
                 </Button>
               </div>

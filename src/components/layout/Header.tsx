@@ -1,4 +1,4 @@
-import { Bell, User, LogOut, Settings, Globe } from 'lucide-react'
+import { Bell, User, LogOut, Settings, Globe, Menu } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -16,9 +16,11 @@ import { getInitials } from '@/lib/utils'
 interface HeaderProps {
   language: 'fr' | 'en'
   onLanguageChange: (lang: 'fr' | 'en') => void
+  isMobile: boolean
+  onMenuClick: () => void
 }
 
-export default function Header({ language, onLanguageChange }: HeaderProps) {
+export default function Header({ language, onLanguageChange, isMobile, onMenuClick }: HeaderProps) {
   const { profile, signOut } = useAuth()
 
   const handleSignOut = async () => {
@@ -27,25 +29,49 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white px-6">
-      {/* Title */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-900">
-          {language === 'fr' ? 'Bienvenue' : 'Welcome'}, {profile?.first_name || 'Client'}
-        </h2>
-        <p className="text-sm text-gray-500">
-          {language === 'fr'
-            ? 'Trouvez votre prochain vol en hélicoptère'
-            : 'Find your next helicopter flight'}
-        </p>
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white px-4 md:px-6">
+      {/* Left side */}
+      <div className="flex items-center gap-3">
+        {/* Mobile menu button */}
+        {isMobile && (
+          <Button variant="ghost" size="icon" onClick={onMenuClick}>
+            <Menu className="h-5 w-5 text-gray-500" />
+          </Button>
+        )}
+
+        {/* Title - hidden on mobile */}
+        <div className="hidden sm:block">
+          <h2 className="text-lg font-semibold text-gray-900">
+            {language === 'fr' ? 'Bienvenue' : 'Welcome'}, {profile?.first_name || 'Client'}
+          </h2>
+          <p className="text-sm text-gray-500">
+            {language === 'fr'
+              ? 'Trouvez votre prochain vol en hélicoptère'
+              : 'Find your next helicopter flight'}
+          </p>
+        </div>
+
+        {/* Mobile logo */}
+        {isMobile && (
+          <div className="flex items-center gap-2">
+            <img
+              src="/images/logo-icon.svg"
+              alt="HeliConnect"
+              className="h-7 w-7"
+            />
+            <span className="font-poppins font-bold text-primary text-sm">
+              HeliConnect
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         {/* Language switcher */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative h-9 w-9">
               <Globe className="h-5 w-5 text-gray-500" />
             </Button>
           </DropdownMenuTrigger>
@@ -66,7 +92,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative h-9 w-9">
               <Bell className="h-5 w-5 text-gray-500" />
               <Badge
                 variant="destructive"
@@ -76,7 +102,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
               </Badge>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
+          <DropdownMenuContent align="end" className="w-72 md:w-80">
             <DropdownMenuLabel>
               {language === 'fr' ? 'Notifications' : 'Notifications'}
             </DropdownMenuLabel>
@@ -92,7 +118,7 @@ export default function Header({ language, onLanguageChange }: HeaderProps) {
         {/* User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-3 px-2">
+            <Button variant="ghost" className="flex items-center gap-2 md:gap-3 px-2">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={profile?.avatar_url || undefined} />
                 <AvatarFallback className="bg-primary text-white text-sm">
