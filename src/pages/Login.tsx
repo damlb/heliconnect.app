@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -20,6 +20,7 @@ const isBusinessEmail = (email: string): boolean => {
 }
 
 export default function Login() {
+  const [searchParams] = useSearchParams()
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -35,6 +36,14 @@ export default function Login() {
   const [registrationSuccess, setRegistrationSuccess] = useState(false)
   const { signIn } = useAuth()
   const navigate = useNavigate()
+
+  // Gérer le paramètre URL pour basculer automatiquement sur l'onglet inscription
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab === 'register' || tab === 'inscription') {
+      setActiveTab('register')
+    }
+  }, [searchParams])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
