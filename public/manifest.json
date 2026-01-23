@@ -1,0 +1,20 @@
+{
+  "name": "HeliConnect - Client",
+  "short_name": "HeliConnect",
+  "description": "Réservez vos vols en hélicoptère - Espace client HeliConnect",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1D51",
+  "theme_color": "#0B1D51",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "lifestyle"],
+  "lang": "fr"
+}
